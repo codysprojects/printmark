@@ -1,0 +1,21 @@
+# Build artifacts
+/dist/
+/printmark
+/bin/
+
+# Local test files
+/test.md
+/test-image.png
+
+# Internal planning/agent-instruction docs — not for public visibility yet
+/TODO.md
+/AGENTS.md
+/CLAUDE.md
+
+# macOS
+.DS_Store
+
+# Go
+*.test
+*.out
+

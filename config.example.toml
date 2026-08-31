@@ -1,0 +1,172 @@
+# printmark example configuration
+#
+# Copy this file to your config location and edit as needed:
+#   $XDG_CONFIG_HOME/printmark/config.toml
+#   (or ~/.config/printmark/config.toml if $XDG_CONFIG_HOME is unset)
+#
+# Every setting below can also be set with an environment variable
+# (PRINTMARK_<SETTING>, e.g. PRINTMARK_BODY_SIZE=12) or a matching CLI flag
+# (--<setting-with-dashes>, e.g. --body-size 12; the most commonly-tweaked
+# print-job flags also have a short form, e.g. -c for --copies — run
+# `printmark --help` for the full list). Precedence, highest to lowest:
+#   CLI flag  >  environment variable  >  this file  >  built-in default
+#
+# You don't need to list every setting here — anything you leave out just
+# keeps its built-in default.
+
+# Page size the PDF is built at — this MUST match what your printer
+# actually has loaded, or you'll get printer errors (e.g. an "E2" media
+# mismatch on some HP printers) partway through a multi-page document,
+# with content silently cut off. Any of fpdf's built-in sizes works:
+# "Letter", "A4", "Legal", "A3", "A5", "Tabloid". Check your OS's default
+# paper size (e.g. macOS: System Settings > Printers & Scanners) and your
+# printer's own configured size — they should both match this setting.
+# Env var: PRINTMARK_PAGE_SIZE
+# Default: "Letter"
+page_size = "Letter"
+
+# Page orientation the PDF is built at. Like page_size, this affects the
+# PDF's own dimensions rather than asking the printer to rotate — the
+# same E2-style mismatch is possible if you request landscape output
+# from the printer without the PDF actually being landscape-shaped.
+# Env var: PRINTMARK_ORIENTATION
+# Default: "Portrait"
+orientation = "Portrait"
+
+# --- The settings below configure the lp (CUPS) print job itself, not ---
+# --- the PDF. Leaving one blank/unset means "let lp/the printer decide", ---
+# --- exactly like running lp by hand with no extra flags. ---
+
+# Printer to send the job to. Leave blank to use your system's default
+# printer. Env var: PRINTMARK_PRINTER
+# Default: "" (system default printer)
+printer = ""
+
+# Number of copies to print. Env var: PRINTMARK_COPIES
+# Default: 1
+copies = 1
+
+# Which pages to print, e.g. "1-4,7,9-12". Leave blank to print every
+# page. Env var: PRINTMARK_PAGE_RANGE
+# Default: "" (all pages)
+page_range = ""
+
+# Print quality: "draft", "normal", or "high". Leave blank to use the
+# printer's own default. Env var: PRINTMARK_QUALITY
+# Default: "" (printer default)
+quality = ""
+
+# Double-sided printing: "off", "long-edge", or "short-edge" (the two
+# duplex binding orientations). Leave blank to use the printer's own
+# default. Env var: PRINTMARK_DUPLEX
+# Default: "" (printer default)
+duplex = ""
+
+# Color mode: "color" or "grayscale". Leave blank to use the printer's
+# own default. Env var: PRINTMARK_COLOR_MODE
+# Default: "" (printer default)
+color_mode = ""
+
+# Font used for regular body text: headings, paragraphs, list items, etc.
+# Must be one of fpdf's built-in core fonts: "Arial", "Times", "Courier",
+# "Symbol", "ZapfDingbats". Env var: PRINTMARK_FONT_FAMILY
+# Default: "Arial"
+font_family = "Arial"
+
+# Font used for inline code and fenced code blocks. Same font choices as
+# font_family above. Env var: PRINTMARK_MONO_FAMILY
+# Default: "Courier"
+mono_family = "Courier"
+
+# Body text size, in points. Env var: PRINTMARK_BODY_SIZE
+# Default: 11.0
+body_size = 11.0
+
+# Line height used when wrapping body text, in millimeters. Bigger values
+# spread lines further apart. Env var: PRINTMARK_LINE_HEIGHT
+# Default: 6.0
+line_height = 6.0
+
+# Font size used inside code blocks and for inline code, in points.
+# Env var: PRINTMARK_CODE_SIZE
+# Default: 9.0
+code_size = 9.0
+
+# Line height inside fenced code blocks, in millimeters.
+# Env var: PRINTMARK_CODE_LINE_HEIGHT
+# Default: 4.5
+code_line_height = 4.5
+
+# Color theme for language-tagged fenced code blocks (```go, ```python,
+# etc.) — real syntax highlighting via github.com/alecthomas/chroma/v2.
+# Any chroma style name works: "github", "monokai", "dracula", "vs",
+# "friendly", and many more. An unrecognized name silently falls back to
+# chroma's own default rather than erroring. A code block with no
+# language tag, or a language chroma doesn't recognize, always renders
+# in plain code_color instead — this setting has no effect on those.
+# A list of styles can be found at https://github.com/alecthomas/chroma/tree/master/styles
+# Env var: PRINTMARK_SYNTAX_THEME
+# Default: "github"
+syntax_theme = "github"
+
+# How far each nesting level of a list is indented, in millimeters.
+# Env var: PRINTMARK_LIST_INDENT
+# Default: 6.0
+list_indent = 6.0
+
+# Extra vertical space added above level-2-and-deeper headings (##, ###,
+# ...), in millimeters. Level-1 headings (#) never get this extra gap,
+# since they're usually a document's title sitting at the top of the page.
+# Env var: PRINTMARK_HEADING_GAP_BEFORE
+# Default: 4.0
+heading_gap_before = 4.0
+
+# Font size for each heading level, in points. # is level 1, ###### is
+# level 6. Env vars: PRINTMARK_HEADING_SIZE_1 through PRINTMARK_HEADING_SIZE_6
+# Defaults: 24 / 20 / 16 / 14 / 12 / 11
+heading_size_1 = 24.0
+heading_size_2 = 20.0
+heading_size_3 = 16.0
+heading_size_4 = 14.0
+heading_size_5 = 12.0
+heading_size_6 = 11.0
+
+# Whether to show a link's URL after its text, e.g. "Click here
+# (https://example.com)" instead of just "Click here".
+# Env var: PRINTMARK_SHOW_LINK_URLS
+# Default: false
+show_link_urls = false
+
+# Colors, all "#RRGGBB" hex strings. Every default below reproduces
+# printmark's original plain-black-and-white look — nothing changes
+# unless you customize these. Matching env vars: PRINTMARK_TEXT_COLOR,
+# PRINTMARK_BOLD_COLOR, PRINTMARK_ITALIC_COLOR, PRINTMARK_HEADING_COLOR,
+# PRINTMARK_CODE_COLOR, PRINTMARK_CODE_BACKGROUND_COLOR,
+# PRINTMARK_LINK_COLOR, PRINTMARK_BLOCKQUOTE_BAR_COLOR.
+
+# Regular body text. Default: "#000000"
+text_color = "#000000"
+
+# **Bold** text. Bold wins if text is both bold and italic. Default: "#000000"
+bold_color = "#000000"
+
+# *Italic* text. Default: "#000000"
+italic_color = "#000000"
+
+# Heading text (# through ######), all levels share this one color.
+# Default: "#000000"
+heading_color = "#000000"
+
+# Inline `code` and fenced code block text. Default: "#000000"
+code_color = "#000000"
+
+# Fenced/indented code block background fill. Default: "#f0f0f0" (light gray)
+code_background_color = "#f0f0f0"
+
+# Link text — for both [text](url) links and bare/autolinked URLs.
+# Default: "#000000" (most browsers use a blue like "#0000ee" instead,
+# if you want that traditional look)
+link_color = "#000000"
+
+# The vertical bar drawn alongside a blockquote's text. Default: "#bebebe" (gray)
+blockquote_bar_color = "#bebebe"
