@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/). Pre-1.0, so the CLI/config surface may still change between minor versions.
 
+## [0.1.1](https://github.com/codysprojects/printmark/compare/v0.1.0...v0.1.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* **ci:** correct the Snyk Code step in the CI workflow ([0f139ca](https://github.com/codysprojects/printmark/commit/0f139cac3c2a4e5e9c283054cba08b37a328ceb4))
+
 ## [Unreleased]
 
 ## [0.1.0] - 2026-08-31
