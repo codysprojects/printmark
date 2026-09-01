@@ -60,7 +60,7 @@ func extractText(t *testing.T, path string) string {
 	if err != nil {
 		t.Fatalf("pdf.Open: %v", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	reader, err := r.GetPlainText()
 	if err != nil {
@@ -100,7 +100,7 @@ func writeTestPNG(t *testing.T, path string) {
 	if err != nil {
 		t.Fatalf("creating test image: %v", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	if err := png.Encode(f, img); err != nil {
 		t.Fatalf("encoding test image: %v", err)

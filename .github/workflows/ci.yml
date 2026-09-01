@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  pr-title:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      # Pinned deliberately (matches the version this config was validated
+      # against) rather than "latest", so a new golangci-lint release can't
+      # silently introduce new failures unrelated to any code change here.
+      - uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.13.2
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test ./...
+
+  snyk:
+    runs-on: ubuntu-latest
+    # Forked PRs don't have access to repo secrets, so SNYK_TOKEN wouldn't
+    # be set there — skip rather than fail every external contribution.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v6
+      # Open-source dependency scan (go.sum, known CVEs).
+      - uses: snyk/actions/golang@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      # Static analysis of our own source (Snyk Code), separate from the
+      # dependency scan above. Kept as an explicit, version-controlled
+      # step here rather than Snyk's own web-configured PR integration,
+      # so the whole pipeline stays visible in this file.
+      - uses: snyk/actions/code@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: darwin
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
+        run: |
+          docker build -f Dockerfile \
+            --build-arg GOOS=${{ matrix.goos }} \
+            --build-arg GOARCH=${{ matrix.goarch }} \
+            -o type=local,dest=dist .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: printmark-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/printmark

@@ -59,7 +59,7 @@ func main() {
 		return
 	}
 
-	defer os.Remove(outPath)
+	defer func() { _ = os.Remove(outPath) }()
 
 	popts := printer.Options{
 		Printer:   cfg.Printer,
@@ -81,6 +81,8 @@ func tempPDFPath(inPath string) (string, error) {
 		return "", err
 	}
 	name := f.Name()
-	f.Close()
+	if err := f.Close(); err != nil {
+		return "", err
+	}
 	return name, nil
 }
