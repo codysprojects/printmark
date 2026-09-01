@@ -53,8 +53,12 @@ jobs:
       # Static analysis of our own source (Snyk Code), separate from the
       # dependency scan above. Kept as an explicit, version-controlled
       # step here rather than Snyk's own web-configured PR integration,
-      # so the whole pipeline stays visible in this file.
-      - uses: snyk/actions/code@master
+      # so the whole pipeline stays visible in this file. There's no
+      # dedicated snyk/actions/code sub-action (verified against the
+      # snyk/actions repo directly), so this installs the Snyk CLI and
+      # runs its `code test` subcommand directly.
+      - uses: snyk/actions/setup@master
+      - run: snyk code test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
