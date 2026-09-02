@@ -7,10 +7,11 @@
 /test.md
 /test-image.png
 
-# Internal planning/agent-instruction docs — not for public visibility yet
+# Internal planning/agent-instruction docs
 /TODO.md
 /AGENTS.md
 /CLAUDE.md
+/NOTES.md
 
 # macOS
 .DS_Store

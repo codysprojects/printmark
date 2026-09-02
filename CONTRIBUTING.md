@@ -1,6 +1,6 @@
 # Contributing to printmark
 
-Thanks for taking a look. This is a young, actively-developed project - for anything large, consider opening an issue first to check it's not already in progress or the approach hasn't already been decided.
+Thanks for helping - for anything large, consider opening an issue first to check it's not already in progress or the approach hasn't already been decided.
 
 ## Setting up
 
@@ -30,13 +30,7 @@ go vet ./...
 go test ./...
 ```
 
-CI also runs `golangci-lint` and a Snyk scan on every PR. Run the linter locally the same way CI does, without installing anything on your machine — via Apple's [`container`](https://github.com/apple/container) CLI:
-
-```sh
-container run --rm -v "$(pwd):/app" -w /app golangci/golangci-lint:v2.13.2 golangci-lint run ./...
-```
-
-or Docker, if you'd rather:
+CI also runs `golangci-lint` and a Snyk scan on every PR. Run the linter locally the same way CI does, without installing anything on your machine with Docker.
 
 ```sh
 docker run --rm -v "$(pwd):/app" -w /app golangci/golangci-lint:v2.13.2 golangci-lint run ./...
@@ -46,7 +40,7 @@ docker run --rm -v "$(pwd):/app" -w /app golangci/golangci-lint:v2.13.2 golangci
 
 **If your change touches rendering** (anything under `internal/pdfrender`), running the automated tests isn't enough on its own. This project has repeatedly found real bugs - mojibake bullets, wrong indentation, content silently cut off, text sized wrong inside headings - that the text-content tests didn't catch, because they check *what text ended up in the PDF*, not *where it ended up on the page*. Before considering a rendering change done:
 
-1. Render a markdown file that exercises what you changed (`./printmark --preview yourfile.md`, or use `test.md` in the repo root as a starting point - it's gitignored, so it's fine to extend it locally).
+1. Render a markdown file that exercises what you changed (`./printmark --preview yourfile.md`).
 2. Actually look at the output. A layout bug is often invisible in extracted text but obvious on the page.
 
 Automated tests are still expected for anything text-content-related (a dropped word, garbled encoding, wrong output for a given input) - see `internal/pdfrender/render_test.go` for the existing pattern (table-driven cases asserting on text extracted from the rendered PDF via a small pure-Go PDF-reading library, kept as a test-only dependency).

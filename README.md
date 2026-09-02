@@ -1,6 +1,6 @@
 # printmark
 
-Print a markdown file from the CLI in one step - no manual PDF conversion, no piping together `pandoc`/`wkhtmltopdf`/`lp`.
+Print a markdown file from the CLI in one step - no manual PDF conversion, no piping together commands.
 
 ```sh
 printmark notes.md
@@ -12,7 +12,7 @@ That's it. It renders the markdown into a formatted PDF and sends it straight to
 
 ## Why
 
-Other tools render markdown nicely, but printing it still means a second step - export to PDF, then print that. printmark skips the middle step entirely.
+Other tools render markdown nicely, but printing it still means a second step, and I'm lazy.  Printmark skips the steps of converting to PDF, printing then deleting the PDF.
 
 ## Features
 
@@ -26,7 +26,7 @@ Other tools render markdown nicely, but printing it still means a second step - 
 
 ## Installation
 
-There isn't a packaged release yet (a Homebrew tap and install script are planned). For now, build from source - you do **not** need Go installed for this; the build runs inside a container, so all you need is Docker (or Apple's `container` CLI, see below).
+For now, build from source - you do **not** need Go installed for this; the build runs inside a container, so all you need is Docker (or Apple's `container` CLI, see below).
 
 ```sh
 docker build -f Dockerfile -o type=local,dest=dist .
@@ -47,6 +47,9 @@ docker build -f Dockerfile --build-arg GOARCH=amd64 -o type=local,dest=dist .
 
 # Linux (x86-64)
 docker build -f Dockerfile --build-arg GOOS=linux --build-arg GOARCH=amd64 -o type=local,dest=dist .
+
+# Linux (arm-64)
+docker build -f Dockerfile --build-arg GOOS=linux --build-arg GOARCH=arm64 -o type=local,dest=dist .
 ```
 
 Any valid `GOOS`/`GOARCH` pair works for producing the binary itself (run `go tool dist list` to see them all, if you have Go installed). Printing (`lp`/CUPS) is currently only exercised on macOS, though - see Platform support below.
@@ -104,7 +107,7 @@ cp config.example.toml ~/.config/printmark/config.toml
 
 ⚠️ **`page_size` and `orientation` must match what your printer actually has loaded.** A mismatch (e.g. printmark building an A4-sized PDF while your printer is loaded with US Letter) can produce printer errors partway through a job and cut off content
 
-⚠️ **`--preview` ignores print-only options.** `--preview` renders the PDF and opens it in a viewer - it never invokes the printer at all, so options that only mean something to the print job itself have no effect on it. This is by design, not a bug, but easy to trip over: e.g. `printmark -p -r 1-4 notes.md` will preview the *entire* document, not just pages 1-4, since `-r`/`--page-range` is applied by the printer (via `lp`) at print time, not while building the PDF. The same is true of `--copies`, `--quality`, `--duplex`, `--color-mode`, and `--printer`. `--page-size` and `--orientation` are the exception - those change how the PDF itself is built, so they *do* show up in `--preview`.
+⚠️ **`--preview` ignores print-only options.** `--preview` renders the PDF and opens it in a viewer - it never invokes the printer at all, so options that only mean something to the print job itself have no effect on it. This is by design for `-r`/`--page-range`, `-c`/`--copies`, `-q`/`--quality`, `-D`/`--duplex`, `-m`/`--color-mode`, and `-d`/`--printer`. `-s`/`--page-size` and `-o`/`--orientation` are the exception - those change how the PDF itself is built, so they *do* show up in `--preview`.
 
 ## Changelog
 
